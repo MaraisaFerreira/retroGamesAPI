@@ -29,38 +29,54 @@ public class GameController {
         @RequestParam(value = "page", defaultValue = "0") Integer page,
         @RequestParam(value = "size", defaultValue = "50") Integer size,
         @RequestParam(value = "direction", defaultValue = "asc") String direction,
-        @RequestParam(value = "order_by", defaultValue = "name") String itemsOrder
-    ){
+        @RequestParam(value = "order_by", defaultValue = "name") String orderBy
+    ) {
         Sort.Direction sortDirection = "desc".equalsIgnoreCase(direction) ?
             Sort.Direction.DESC : Sort.Direction.ASC;
 
         Field[] fields = GameDTO.class.getDeclaredFields();
         List<String> sortOptions = Arrays.stream(fields).map(Field::getName).toList();
-        String by_field = sortOptions.contains(itemsOrder.toLowerCase()) ?
-            itemsOrder.toLowerCase() : sortOptions.get(1);
+        String by_field = sortOptions.contains(orderBy.toLowerCase()) ?
+            orderBy.toLowerCase() : sortOptions.get(1);
 
         Pageable pageable = PageRequest.of(page, size, Sort.by(sortDirection, by_field));
 
         return ResponseEntity.ok(gameService.findAll(pageable));
     }
 
+    @GetMapping("/search/{name}")
+    public ResponseEntity<PagedModel<EntityModel<GameDTO>>> findByPartName(
+        @PathVariable String name,
+        @RequestParam(value = "page", defaultValue = "0") Integer page,
+        @RequestParam(value = "size", defaultValue = "30") Integer size,
+        @RequestParam(value = "direction", defaultValue = "asc") String direction,
+        @RequestParam(value = "order_by", defaultValue = "name") String orderBy
+    ) {
+        Sort.Direction sortDirection = "desc".equalsIgnoreCase(direction) ?
+            Sort.Direction.DESC : Sort.Direction.ASC;
+
+        Pageable pageable = PageRequest.of(page, size, Sort.by(sortDirection, orderBy));
+
+        return ResponseEntity.ok(gameService.findByPartName(name, pageable));
+    }
+
     @GetMapping("/{id}")
-    public ResponseEntity<GameDTO> findById(@PathVariable Long id){
+    public ResponseEntity<GameDTO> findById(@PathVariable Long id) {
         return ResponseEntity.ok(gameService.findById(id));
     }
 
     @PostMapping
-    public ResponseEntity<GameDTO> create(@RequestBody GameDTO game){
+    public ResponseEntity<GameDTO> create(@RequestBody GameDTO game) {
         return ResponseEntity.status(HttpStatus.CREATED).body(gameService.create(game));
     }
 
     @PutMapping
-    public ResponseEntity<GameDTO> update(@RequestBody GameDTO game){
+    public ResponseEntity<GameDTO> update(@RequestBody GameDTO game) {
         return ResponseEntity.ok(gameService.update(game));
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> delete(@PathVariable Long id){
+    public ResponseEntity<Void> delete(@PathVariable Long id) {
         gameService.delete(id);
         return ResponseEntity.noContent().build();
     }

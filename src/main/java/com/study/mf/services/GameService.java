@@ -5,6 +5,7 @@ import com.study.mf.data.dto.GameDTO;
 import com.study.mf.exceptions.CustomBadRequestException;
 import com.study.mf.exceptions.CustomResourceNotFoundException;
 import com.study.mf.model.Game;
+
 import static com.study.mf.mappers.ObjectMapper.parseObject;
 import static com.study.mf.mappers.ObjectMapper.parseListObject;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
@@ -32,10 +33,10 @@ public class GameService {
     @Autowired
     PagedResourcesAssembler<GameDTO> assembler;
 
-    public PagedModel<EntityModel<GameDTO>> findAll(Pageable pageable){
+    public PagedModel<EntityModel<GameDTO>> findAll(Pageable pageable) {
         Page<Game> gamePage = repository.findAll(pageable);
 
-        Page<GameDTO> dtoPage =  gamePage.map(game -> {
+        Page<GameDTO> dtoPage = gamePage.map(game -> {
             GameDTO dto = parseObject(game, GameDTO.class);
             addHateoasLinks(dto);
             return dto;
@@ -55,7 +56,29 @@ public class GameService {
         return assembler.toModel(dtoPage, pageLinks);
     }
 
-    public GameDTO findById(Long id){
+    public PagedModel<EntityModel<GameDTO>> findByPartName(String name, Pageable pageable) {
+        Page<Game> gamePage = repository.findByPartName(name, pageable);
+        Page<GameDTO> gameDTOPage = gamePage.map(game -> {
+            GameDTO dto = parseObject(game, GameDTO.class);
+            addHateoasLinks(dto);
+            return dto;
+        });
+        Sort.Order order = pageable.getSort().iterator().next();
+        String direction = order.getDirection().toString();
+        String orderBy = order.getProperty();
+
+        Link pageLink = linkTo(methodOn(GameController.class).findByPartName(
+            name,
+            pageable.getPageNumber(),
+            pageable.getPageSize(),
+            direction,
+            orderBy
+        )).withSelfRel().withType("GET");
+
+        return assembler.toModel(gameDTOPage, pageLink);
+    }
+
+    public GameDTO findById(Long id) {
         if (id == null) throw new CustomBadRequestException("Id cannot be null");
 
         Game game = repository.findById(id)
@@ -66,7 +89,7 @@ public class GameService {
         return dto;
     }
 
-    public GameDTO create(GameDTO game){
+    public GameDTO create(GameDTO game) {
         if (game.getName() == null || game.getConsole() == null || game.getYear() == null) {
             throw new CustomBadRequestException("Name / Console and Year cannot be null.");
         }
@@ -80,7 +103,7 @@ public class GameService {
     }
 
     @Transactional
-    public GameDTO update(GameDTO game){
+    public GameDTO update(GameDTO game) {
         if (game.getId() == null) throw new CustomBadRequestException("Id cannot be null");
 
         Game entity = repository.findById(game.getId())
@@ -90,12 +113,12 @@ public class GameService {
         if (game.getConsole() != null) entity.setConsole(game.getConsole());
         if (game.getYear() != null) entity.setYear(game.getYear());
 
-        GameDTO dto =  parseObject(entity, GameDTO.class);
+        GameDTO dto = parseObject(entity, GameDTO.class);
         addHateoasLinks(dto);
         return dto;
     }
 
-    public void delete(Long id){
+    public void delete(Long id) {
         if (id == null) throw new CustomBadRequestException("Id cannot be null");
 
         Game game = repository.findById(id)
