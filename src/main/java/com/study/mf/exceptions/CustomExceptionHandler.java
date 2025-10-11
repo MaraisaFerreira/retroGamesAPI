@@ -16,7 +16,7 @@ public class CustomExceptionHandler extends ResponseEntityExceptionHandler {
     public ResponseEntity<ResponseException> genericExceptionHandler(Exception ex, WebRequest request) {
         return ResponseEntity.internalServerError().body(
             new ResponseException(
-                Instant.now().toEpochMilli(),
+                Instant.now(),
                 ex.getMessage(),
                 request.getDescription(false)
             )
@@ -30,7 +30,7 @@ public class CustomExceptionHandler extends ResponseEntityExceptionHandler {
     ) {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(
             new ResponseException(
-                Instant.now().toEpochMilli(),
+                Instant.now(),
                 ex.getMessage(),
                 request.getDescription(false)
             )
@@ -44,7 +44,7 @@ public class CustomExceptionHandler extends ResponseEntityExceptionHandler {
     ) {
         return ResponseEntity.badRequest().body(
             new ResponseException(
-                Instant.now().toEpochMilli(),
+                Instant.now(),
                 ex.getMessage(),
                 request.getDescription(false)
             )
