@@ -10,6 +10,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.hateoas.EntityModel;
 import org.springframework.hateoas.PagedModel;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -24,7 +25,13 @@ public class GameController {
     @Autowired
     private GameService gameService;
 
-    @GetMapping
+    @GetMapping(
+        produces = {
+            MediaType.APPLICATION_JSON_VALUE,
+            MediaType.APPLICATION_XML_VALUE,
+            MediaType.APPLICATION_YAML_VALUE,
+        }
+    )
     public ResponseEntity<PagedModel<EntityModel<GameDTO>>> findAll(
         @RequestParam(value = "page", defaultValue = "0") Integer page,
         @RequestParam(value = "size", defaultValue = "50") Integer size,
@@ -44,7 +51,14 @@ public class GameController {
         return ResponseEntity.ok(gameService.findAll(pageable));
     }
 
-    @GetMapping("/search/{name}")
+    @GetMapping(
+        value = "/search/{name}",
+        produces = {
+            MediaType.APPLICATION_JSON_VALUE,
+            MediaType.APPLICATION_XML_VALUE,
+            MediaType.APPLICATION_YAML_VALUE,
+        }
+    )
     public ResponseEntity<PagedModel<EntityModel<GameDTO>>> findByPartName(
         @PathVariable String name,
         @RequestParam(value = "page", defaultValue = "0") Integer page,
@@ -60,17 +74,46 @@ public class GameController {
         return ResponseEntity.ok(gameService.findByPartName(name, pageable));
     }
 
-    @GetMapping("/{id}")
+    @GetMapping(
+        value = "/{id}",
+        produces = {
+            MediaType.APPLICATION_JSON_VALUE,
+            MediaType.APPLICATION_XML_VALUE,
+            MediaType.APPLICATION_YAML_VALUE,
+        }
+    )
     public ResponseEntity<GameDTO> findById(@PathVariable Long id) {
         return ResponseEntity.ok(gameService.findById(id));
     }
 
-    @PostMapping
+    @PostMapping(
+        produces = {
+            MediaType.APPLICATION_JSON_VALUE,
+            MediaType.APPLICATION_XML_VALUE,
+            MediaType.APPLICATION_YAML_VALUE,
+        },
+        consumes = {
+            MediaType.APPLICATION_JSON_VALUE,
+            MediaType.APPLICATION_XML_VALUE,
+            MediaType.APPLICATION_YAML_VALUE,
+        }
+    )
     public ResponseEntity<GameDTO> create(@RequestBody GameDTO game) {
         return ResponseEntity.status(HttpStatus.CREATED).body(gameService.create(game));
     }
 
-    @PutMapping
+    @PutMapping(
+        produces = {
+            MediaType.APPLICATION_JSON_VALUE,
+            MediaType.APPLICATION_XML_VALUE,
+            MediaType.APPLICATION_YAML_VALUE,
+        },
+        consumes = {
+            MediaType.APPLICATION_JSON_VALUE,
+            MediaType.APPLICATION_XML_VALUE,
+            MediaType.APPLICATION_YAML_VALUE,
+        }
+    )
     public ResponseEntity<GameDTO> update(@RequestBody GameDTO game) {
         return ResponseEntity.ok(gameService.update(game));
     }
