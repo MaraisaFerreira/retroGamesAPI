@@ -13,6 +13,13 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 import com.study.mf.repository.GameRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PagedResourcesAssembler;
+import org.springframework.hateoas.EntityModel;
+import org.springframework.hateoas.Link;
+import org.springframework.hateoas.PagedModel;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -22,13 +29,30 @@ public class GameService {
     @Autowired
     private GameRepository repository;
 
-    public List<GameDTO> findAll(){
-        List<Game> game = repository.findAll();
-        List<GameDTO> dtos = parseListObject(game, GameDTO.class);
-        for (GameDTO dto : dtos) {
+    @Autowired
+    PagedResourcesAssembler<GameDTO> assembler;
+
+    public PagedModel<EntityModel<GameDTO>> findAll(Pageable pageable){
+        Page<Game> gamePage = repository.findAll(pageable);
+
+        Page<GameDTO> dtoPage =  gamePage.map(game -> {
+            GameDTO dto = parseObject(game, GameDTO.class);
             addHateoasLinks(dto);
-        }
-        return dtos;
+            return dto;
+        });
+
+        Sort.Order order = pageable.getSort().iterator().next();
+        String direction = order.getDirection().toString();
+        String itemOrder = order.getProperty();
+
+        Link pageLinks = linkTo(methodOn(GameController.class).findAll(
+            pageable.getPageNumber(),
+            pageable.getPageSize(),
+            direction,
+            itemOrder
+        )).withSelfRel().withType("GET");
+
+        return assembler.toModel(dtoPage, pageLinks);
     }
 
     public GameDTO findById(Long id){
@@ -81,7 +105,7 @@ public class GameService {
 
     private void addHateoasLinks(GameDTO dto) {
         dto.add(linkTo(methodOn(GameController.class).findById(dto.getId())).withSelfRel().withType("GET"));
-        dto.add(linkTo(methodOn(GameController.class).findAll()).withRel("findAll").withType("GET"));
+        dto.add(linkTo(methodOn(GameController.class).findAll(0, 50, "asc", "name")).withRel("findAll").withType("GET"));
         dto.add(linkTo(methodOn(GameController.class).create(dto)).withRel("create").withType("POST"));
         dto.add(linkTo(methodOn(GameController.class).update(dto)).withRel("update").withType("PUT"));
         dto.add(linkTo(methodOn(GameController.class).delete(dto.getId())).withRel("delete").withType("DELETE"));

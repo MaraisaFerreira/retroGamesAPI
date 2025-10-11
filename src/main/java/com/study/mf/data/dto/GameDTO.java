@@ -2,9 +2,11 @@ package com.study.mf.data.dto;
 
 import com.study.mf.model.Game;
 import org.springframework.hateoas.RepresentationModel;
+import org.springframework.hateoas.server.core.Relation;
 
 import java.util.Objects;
 
+@Relation(collectionRelation = "games")
 public class GameDTO extends RepresentationModel<GameDTO> {
 
     private Long id;
