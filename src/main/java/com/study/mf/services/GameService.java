@@ -1,15 +1,20 @@
 package com.study.mf.services;
 
+import com.study.mf.controllers.GameController;
 import com.study.mf.data.dto.GameDTO;
-import com.study.mf.exceptions.CustomResourceNotFound;
+import com.study.mf.exceptions.CustomBadRequestException;
+import com.study.mf.exceptions.CustomResourceNotFoundException;
 import com.study.mf.model.Game;
 import static com.study.mf.mappers.ObjectMapper.parseObject;
 import static com.study.mf.mappers.ObjectMapper.parseListObject;
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
+
 import com.study.mf.repository.GameRepository;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -19,31 +24,66 @@ public class GameService {
 
     public List<GameDTO> findAll(){
         List<Game> game = repository.findAll();
-        return parseListObject(game, GameDTO.class);
+        List<GameDTO> dtos = parseListObject(game, GameDTO.class);
+        for (GameDTO dto : dtos) {
+            addHateoasLinks(dto);
+        }
+        return dtos;
     }
 
     public GameDTO findById(Long id){
-        Game game = repository.findById(id).orElseThrow(() -> new CustomResourceNotFound("Game Not Found"));
-        return parseObject(game, GameDTO.class);
+        if (id == null) throw new CustomBadRequestException("Id cannot be null");
+
+        Game game = repository.findById(id)
+            .orElseThrow(() -> new CustomResourceNotFoundException("Game Not Found"));
+
+        GameDTO dto = parseObject(game, GameDTO.class);
+        addHateoasLinks(dto);
+        return dto;
     }
 
     public GameDTO create(GameDTO game){
+        if (game.getName() == null || game.getConsole() == null || game.getYear() == null) {
+            throw new CustomBadRequestException("Name / Console and Year cannot be null.");
+        }
+
         Game toSave = parseObject(game, Game.class);
         Game saved = repository.save(toSave);
-        return parseObject(saved, GameDTO.class);
+
+        GameDTO dto = parseObject(saved, GameDTO.class);
+        addHateoasLinks(dto);
+        return dto;
     }
 
-    public GameDTO update(Long id, GameDTO game){
-        Game entity = repository.findById(id).orElseThrow(() -> new CustomResourceNotFound("Game Not Found"));
-        entity.setName(game.getName());
-        entity.setConsole(game.getConsole());
-        entity.setYear(game.getYear());
-        Game saved = repository.save(entity);
-        return parseObject(saved, GameDTO.class);
+    @Transactional
+    public GameDTO update(GameDTO game){
+        if (game.getId() == null) throw new CustomBadRequestException("Id cannot be null");
+
+        Game entity = repository.findById(game.getId())
+            .orElseThrow(() -> new CustomResourceNotFoundException("Game Not Found"));
+
+        if (game.getName() != null) entity.setName(game.getName());
+        if (game.getConsole() != null) entity.setConsole(game.getConsole());
+        if (game.getYear() != null) entity.setYear(game.getYear());
+
+        GameDTO dto =  parseObject(entity, GameDTO.class);
+        addHateoasLinks(dto);
+        return dto;
     }
 
     public void delete(Long id){
-        Game game = repository.findById(id).orElseThrow(() -> new CustomResourceNotFound("Game Not Found"));
+        if (id == null) throw new CustomBadRequestException("Id cannot be null");
+
+        Game game = repository.findById(id)
+            .orElseThrow(() -> new CustomResourceNotFoundException("Game Not Found"));
         repository.delete(game);
+    }
+
+    private void addHateoasLinks(GameDTO dto) {
+        dto.add(linkTo(methodOn(GameController.class).findById(dto.getId())).withSelfRel().withType("GET"));
+        dto.add(linkTo(methodOn(GameController.class).findAll()).withRel("findAll").withType("GET"));
+        dto.add(linkTo(methodOn(GameController.class).create(dto)).withRel("create").withType("POST"));
+        dto.add(linkTo(methodOn(GameController.class).update(dto)).withRel("update").withType("PUT"));
+        dto.add(linkTo(methodOn(GameController.class).delete(dto.getId())).withRel("delete").withType("DELETE"));
     }
 }

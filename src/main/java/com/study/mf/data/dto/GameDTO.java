@@ -1,10 +1,11 @@
 package com.study.mf.data.dto;
 
 import com.study.mf.model.Game;
+import org.springframework.hateoas.RepresentationModel;
 
 import java.util.Objects;
 
-public class GameDTO {
+public class GameDTO extends RepresentationModel<GameDTO> {
 
     private Long id;
     private String name;

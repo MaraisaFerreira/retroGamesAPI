@@ -31,12 +31,9 @@ public class GameController {
         return ResponseEntity.status(HttpStatus.CREATED).body(gameService.create(game));
     }
 
-    @PutMapping("/{id}")
-    public ResponseEntity<GameDTO> update(
-            @PathVariable Long id,
-            @RequestBody GameDTO game
-    ){
-        return ResponseEntity.ok(gameService.update(id, game));
+    @PutMapping
+    public ResponseEntity<GameDTO> update(@RequestBody GameDTO game){
+        return ResponseEntity.ok(gameService.update(game));
     }
 
     @DeleteMapping("/{id}")
