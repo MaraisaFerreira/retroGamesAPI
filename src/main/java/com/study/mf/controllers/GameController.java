@@ -21,7 +21,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/v1/games")
-public class GameController {
+public class GameController implements com.study.mf.controllers.docs.GameControllerDocs {
     @Autowired
     private GameService gameService;
 
@@ -32,6 +32,7 @@ public class GameController {
             MediaType.APPLICATION_YAML_VALUE,
         }
     )
+    @Override
     public ResponseEntity<PagedModel<EntityModel<GameDTO>>> findAll(
         @RequestParam(value = "page", defaultValue = "0") Integer page,
         @RequestParam(value = "size", defaultValue = "50") Integer size,
@@ -59,6 +60,7 @@ public class GameController {
             MediaType.APPLICATION_YAML_VALUE,
         }
     )
+    @Override
     public ResponseEntity<PagedModel<EntityModel<GameDTO>>> findByPartName(
         @PathVariable String name,
         @RequestParam(value = "page", defaultValue = "0") Integer page,
@@ -82,6 +84,7 @@ public class GameController {
             MediaType.APPLICATION_YAML_VALUE,
         }
     )
+    @Override
     public ResponseEntity<GameDTO> findById(@PathVariable Long id) {
         return ResponseEntity.ok(gameService.findById(id));
     }
@@ -98,6 +101,7 @@ public class GameController {
             MediaType.APPLICATION_YAML_VALUE,
         }
     )
+    @Override
     public ResponseEntity<GameDTO> create(@RequestBody GameDTO game) {
         return ResponseEntity.status(HttpStatus.CREATED).body(gameService.create(game));
     }
@@ -114,11 +118,13 @@ public class GameController {
             MediaType.APPLICATION_YAML_VALUE,
         }
     )
+    @Override
     public ResponseEntity<GameDTO> update(@RequestBody GameDTO game) {
         return ResponseEntity.ok(gameService.update(game));
     }
 
     @DeleteMapping("/{id}")
+    @Override
     public ResponseEntity<Void> delete(@PathVariable Long id) {
         gameService.delete(id);
         return ResponseEntity.noContent().build();
