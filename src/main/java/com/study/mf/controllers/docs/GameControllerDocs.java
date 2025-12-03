@@ -23,11 +23,7 @@ public interface GameControllerDocs {
         responses = {
             @ApiResponse(description = "Success", responseCode = "200", content = {
                 @Content(mediaType = MediaType.APPLICATION_JSON_VALUE,
-                    array = @ArraySchema(schema = @Schema(implementation = GameDTO.class))),
-                @Content(mediaType = MediaType.APPLICATION_XML_VALUE,
-                    array = @ArraySchema(schema = @Schema(implementation = GameDTO.class))),
-                @Content(mediaType = MediaType.APPLICATION_YAML_VALUE,
-                    array = @ArraySchema(schema = @Schema(implementation = GameDTO.class))),
+                    array = @ArraySchema(schema = @Schema(implementation = GameDTO.class)))
             }),
             @ApiResponse(description = "Internal Server Error", responseCode = "500",
                 content = @Content(schema = @Schema(implementation = ResponseException.class)))
@@ -44,11 +40,7 @@ public interface GameControllerDocs {
         responses = {
             @ApiResponse(description = "Success", responseCode = "200", content = {
                 @Content(mediaType = MediaType.APPLICATION_JSON_VALUE,
-                    array = @ArraySchema(schema = @Schema(implementation = GameDTO.class))),
-                @Content(mediaType = MediaType.APPLICATION_XML_VALUE,
-                    array = @ArraySchema(schema = @Schema(implementation = GameDTO.class))),
-                @Content(mediaType = MediaType.APPLICATION_YAML_VALUE,
-                    array = @ArraySchema(schema = @Schema(implementation = GameDTO.class))),
+                    array = @ArraySchema(schema = @Schema(implementation = GameDTO.class)))
             }),
             @ApiResponse(description = "Bad Request", responseCode = "400",
                 content = @Content(schema = @Schema(implementation = ResponseException.class))),
@@ -70,14 +62,6 @@ public interface GameControllerDocs {
                 @Content(
                     mediaType = MediaType.APPLICATION_JSON_VALUE,
                     schema = @Schema(implementation = GameDTO.class)
-                ),
-                @Content(
-                    mediaType = MediaType.APPLICATION_XML_VALUE,
-                    schema = @Schema(implementation = GameDTO.class)
-                ),
-                @Content(
-                    mediaType = MediaType.APPLICATION_YAML_VALUE,
-                    schema = @Schema(implementation = GameDTO.class)
                 )
             }),
             @ApiResponse(description = "Not Found", responseCode = "404",
@@ -98,21 +82,13 @@ public interface GameControllerDocs {
             required = true,
             content = {
                 @Content(mediaType = MediaType.APPLICATION_JSON_VALUE,
-                    array = @ArraySchema(schema = @Schema(implementation = GameDTO.class))),
-                @Content(mediaType = MediaType.APPLICATION_XML_VALUE,
-                    array = @ArraySchema(schema = @Schema(implementation = GameDTO.class))),
-                @Content(mediaType = MediaType.APPLICATION_YAML_VALUE,
-                    array = @ArraySchema(schema = @Schema(implementation = GameDTO.class))),
+                    array = @ArraySchema(schema = @Schema(implementation = GameDTO.class)))
             }
         ),
         responses = {
             @ApiResponse(description = "Success", responseCode = "201", content = {
                 @Content(mediaType = MediaType.APPLICATION_JSON_VALUE,
-                    array = @ArraySchema(schema = @Schema(implementation = GameDTO.class))),
-                @Content(mediaType = MediaType.APPLICATION_XML_VALUE,
-                    array = @ArraySchema(schema = @Schema(implementation = GameDTO.class))),
-                @Content(mediaType = MediaType.APPLICATION_YAML_VALUE,
-                    array = @ArraySchema(schema = @Schema(implementation = GameDTO.class))),
+                    array = @ArraySchema(schema = @Schema(implementation = GameDTO.class)))
             }),
             @ApiResponse(description = "Bad Request", responseCode = "400",
                 content = @Content(schema = @Schema(implementation = ResponseException.class))),
@@ -128,21 +104,13 @@ public interface GameControllerDocs {
             required = true,
             content = {
                 @Content(mediaType = MediaType.APPLICATION_JSON_VALUE,
-                    array = @ArraySchema(schema = @Schema(implementation = GameDTO.class))),
-                @Content(mediaType = MediaType.APPLICATION_XML_VALUE,
-                    array = @ArraySchema(schema = @Schema(implementation = GameDTO.class))),
-                @Content(mediaType = MediaType.APPLICATION_YAML_VALUE,
-                    array = @ArraySchema(schema = @Schema(implementation = GameDTO.class))),
+                    array = @ArraySchema(schema = @Schema(implementation = GameDTO.class)))
             }
         ),
         responses = {
             @ApiResponse(description = "Success", responseCode = "201", content = {
                 @Content(mediaType = MediaType.APPLICATION_JSON_VALUE,
-                    array = @ArraySchema(schema = @Schema(implementation = GameDTO.class))),
-                @Content(mediaType = MediaType.APPLICATION_XML_VALUE,
-                    array = @ArraySchema(schema = @Schema(implementation = GameDTO.class))),
-                @Content(mediaType = MediaType.APPLICATION_YAML_VALUE,
-                    array = @ArraySchema(schema = @Schema(implementation = GameDTO.class))),
+                    array = @ArraySchema(schema = @Schema(implementation = GameDTO.class)))
             }),
             @ApiResponse(description = "Not Found", responseCode = "404",
                 content = @Content(schema = @Schema(implementation = ResponseException.class))),
