@@ -2,13 +2,10 @@ package com.study.mf.docs;
 
 import com.study.mf.dto.GameDTO;
 import com.study.mf.dto.wrapper.GameDtoPagedModelWrapper;
-import com.study.mf.exceptions.ResponseException;
+import com.study.mf.exceptions.ExceptionResponse;
 import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.Parameter;
-import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
-import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.hateoas.EntityModel;
@@ -27,7 +24,7 @@ public interface GameControllerDocs {
                     schema = @Schema(implementation = GameDtoPagedModelWrapper.class))
             }),
             @ApiResponse(description = "Internal Server Error", responseCode = "500",
-                content = @Content(schema = @Schema(implementation = ResponseException.class)))
+                content = @Content(schema = @Schema(implementation = ExceptionResponse.class)))
         }
     )
     ResponseEntity<PagedModel<EntityModel<GameDTO>>> findAll(Integer page, Integer size,
@@ -42,9 +39,9 @@ public interface GameControllerDocs {
                     schema = @Schema(implementation = GameDtoPagedModelWrapper.class))
             }),
             @ApiResponse(description = "Bad Request", responseCode = "400",
-                content = @Content(schema = @Schema(implementation = ResponseException.class))),
+                content = @Content(schema = @Schema(implementation = ExceptionResponse.class))),
             @ApiResponse(description = "Internal Server Error", responseCode = "500",
-                content = @Content(schema = @Schema(implementation = ResponseException.class)))
+                content = @Content(schema = @Schema(implementation = ExceptionResponse.class)))
         }
     )
     ResponseEntity<PagedModel<EntityModel<GameDTO>>> findByPartName(String name, Integer page,
@@ -62,11 +59,11 @@ public interface GameControllerDocs {
                 )
             }),
             @ApiResponse(description = "Not Found", responseCode = "404",
-                content = @Content(schema = @Schema(implementation = ResponseException.class))),
+                content = @Content(schema = @Schema(implementation = ExceptionResponse.class))),
             @ApiResponse(description = "Bad Request", responseCode = "400",
-                content = @Content(schema = @Schema(implementation = ResponseException.class))),
+                content = @Content(schema = @Schema(implementation = ExceptionResponse.class))),
             @ApiResponse(description = "Internal Server Error", responseCode = "500",
-                content = @Content(schema = @Schema(implementation = ResponseException.class)))
+                content = @Content(schema = @Schema(implementation = ExceptionResponse.class)))
 
         }
 
@@ -81,9 +78,9 @@ public interface GameControllerDocs {
                     schema = @Schema(implementation = GameDTO.class))
             }),
             @ApiResponse(description = "Bad Request", responseCode = "400",
-                content = @Content(schema = @Schema(implementation = ResponseException.class))),
+                content = @Content(schema = @Schema(implementation = ExceptionResponse.class))),
             @ApiResponse(description = "Internal Server Error", responseCode = "500",
-                content = @Content(schema = @Schema(implementation = ResponseException.class)))
+                content = @Content(schema = @Schema(implementation = ExceptionResponse.class)))
         }
     )
     ResponseEntity<GameDTO> create(GameDTO game);
@@ -96,11 +93,11 @@ public interface GameControllerDocs {
                     schema = @Schema(implementation = GameDTO.class))
             }),
             @ApiResponse(description = "Not Found", responseCode = "404",
-                content = @Content(schema = @Schema(implementation = ResponseException.class))),
+                content = @Content(schema = @Schema(implementation = ExceptionResponse.class))),
             @ApiResponse(description = "Bad Request", responseCode = "400",
-                content = @Content(schema = @Schema(implementation = ResponseException.class))),
+                content = @Content(schema = @Schema(implementation = ExceptionResponse.class))),
             @ApiResponse(description = "Internal Server Error", responseCode = "500",
-                content = @Content(schema = @Schema(implementation = ResponseException.class)))
+                content = @Content(schema = @Schema(implementation = ExceptionResponse.class)))
         }
     )
     ResponseEntity<GameDTO> update(GameDTO game);
@@ -110,11 +107,11 @@ public interface GameControllerDocs {
         responses = {
             @ApiResponse(description = "No Content", responseCode = "204", content = @Content),
             @ApiResponse(description = "Not Found", responseCode = "404",
-                content = @Content(schema = @Schema(implementation = ResponseException.class))),
+                content = @Content(schema = @Schema(implementation = ExceptionResponse.class))),
             @ApiResponse(description = "Bad Request", responseCode = "400",
-                content = @Content(schema = @Schema(implementation = ResponseException.class))),
+                content = @Content(schema = @Schema(implementation = ExceptionResponse.class))),
             @ApiResponse(description = "Internal Server Error", responseCode = "500",
-                content = @Content(schema = @Schema(implementation = ResponseException.class)))
+                content = @Content(schema = @Schema(implementation = ExceptionResponse.class)))
         }
     )
     ResponseEntity<Void> delete(Long id);
