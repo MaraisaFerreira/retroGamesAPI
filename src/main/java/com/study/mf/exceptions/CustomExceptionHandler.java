@@ -13,9 +13,9 @@ import java.time.Instant;
 public class CustomExceptionHandler extends ResponseEntityExceptionHandler {
 
     @ExceptionHandler(Exception.class)
-    public ResponseEntity<ResponseException> genericExceptionHandler(Exception ex, WebRequest request) {
+    public ResponseEntity<ExceptionResponse> genericExceptionHandler(Exception ex, WebRequest request) {
         return ResponseEntity.internalServerError().body(
-            new ResponseException(
+            new ExceptionResponse(
                 Instant.now(),
                 ex.getMessage(),
                 request.getDescription(false)
@@ -24,12 +24,12 @@ public class CustomExceptionHandler extends ResponseEntityExceptionHandler {
     }
 
     @ExceptionHandler(CustomResourceNotFoundException.class)
-    public ResponseEntity<ResponseException> customNotFoundExceptionHandler(
-        CustomBadRequestException ex,
+    public ResponseEntity<ExceptionResponse> customNotFoundExceptionHandler(
+        CustomResourceNotFoundException ex,
         WebRequest request
     ) {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(
-            new ResponseException(
+            new ExceptionResponse(
                 Instant.now(),
                 ex.getMessage(),
                 request.getDescription(false)
@@ -38,12 +38,12 @@ public class CustomExceptionHandler extends ResponseEntityExceptionHandler {
     }
 
     @ExceptionHandler(CustomBadRequestException.class)
-    public ResponseEntity<ResponseException> customBadRequestExceptionHandler(
+    public ResponseEntity<ExceptionResponse> customBadRequestExceptionHandler(
         CustomBadRequestException ex,
         WebRequest request
     ) {
         return ResponseEntity.badRequest().body(
-            new ResponseException(
+            new ExceptionResponse(
                 Instant.now(),
                 ex.getMessage(),
                 request.getDescription(false)
