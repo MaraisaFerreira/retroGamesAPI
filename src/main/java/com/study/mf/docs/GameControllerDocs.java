@@ -1,6 +1,7 @@
-package com.study.mf.controllers.docs;
+package com.study.mf.docs;
 
-import com.study.mf.data.dto.GameDTO;
+import com.study.mf.dto.GameDTO;
+import com.study.mf.dto.wrapper.GameDtoPagedModelWrapper;
 import com.study.mf.exceptions.ResponseException;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -23,7 +24,7 @@ public interface GameControllerDocs {
         responses = {
             @ApiResponse(description = "Success", responseCode = "200", content = {
                 @Content(mediaType = MediaType.APPLICATION_JSON_VALUE,
-                    array = @ArraySchema(schema = @Schema(implementation = GameDTO.class)))
+                    schema = @Schema(implementation = GameDtoPagedModelWrapper.class))
             }),
             @ApiResponse(description = "Internal Server Error", responseCode = "500",
                 content = @Content(schema = @Schema(implementation = ResponseException.class)))
@@ -35,12 +36,10 @@ public interface GameControllerDocs {
 
     @Operation(
         summary = "Get All Games with searched name.",
-        parameters = @Parameter(name = "name", required = true,
-            schema = @Schema(implementation = String.class)),
         responses = {
             @ApiResponse(description = "Success", responseCode = "200", content = {
                 @Content(mediaType = MediaType.APPLICATION_JSON_VALUE,
-                    array = @ArraySchema(schema = @Schema(implementation = GameDTO.class)))
+                    schema = @Schema(implementation = GameDtoPagedModelWrapper.class))
             }),
             @ApiResponse(description = "Bad Request", responseCode = "400",
                 content = @Content(schema = @Schema(implementation = ResponseException.class))),
@@ -55,8 +54,6 @@ public interface GameControllerDocs {
 
     @Operation(
         summary = "Get a specific game from DB using its id.",
-        parameters = @Parameter(name = "id", required = true,
-            schema = @Schema(implementation = Integer.class)),
         responses = {
             @ApiResponse(description = "Success", responseCode = "200", content = {
                 @Content(
@@ -78,17 +75,10 @@ public interface GameControllerDocs {
 
     @Operation(
         summary = "Add a new game on DB",
-        requestBody = @RequestBody(
-            required = true,
-            content = {
-                @Content(mediaType = MediaType.APPLICATION_JSON_VALUE,
-                    array = @ArraySchema(schema = @Schema(implementation = GameDTO.class)))
-            }
-        ),
         responses = {
             @ApiResponse(description = "Success", responseCode = "201", content = {
                 @Content(mediaType = MediaType.APPLICATION_JSON_VALUE,
-                    array = @ArraySchema(schema = @Schema(implementation = GameDTO.class)))
+                    schema = @Schema(implementation = GameDTO.class))
             }),
             @ApiResponse(description = "Bad Request", responseCode = "400",
                 content = @Content(schema = @Schema(implementation = ResponseException.class))),
@@ -99,18 +89,11 @@ public interface GameControllerDocs {
     ResponseEntity<GameDTO> create(GameDTO game);
 
     @Operation(
-        summary = "Add a new game on DB",
-        requestBody = @RequestBody(
-            required = true,
-            content = {
-                @Content(mediaType = MediaType.APPLICATION_JSON_VALUE,
-                    array = @ArraySchema(schema = @Schema(implementation = GameDTO.class)))
-            }
-        ),
+        summary = "Change game on DB",
         responses = {
-            @ApiResponse(description = "Success", responseCode = "201", content = {
+            @ApiResponse(description = "Success", responseCode = "200", content = {
                 @Content(mediaType = MediaType.APPLICATION_JSON_VALUE,
-                    array = @ArraySchema(schema = @Schema(implementation = GameDTO.class)))
+                    schema = @Schema(implementation = GameDTO.class))
             }),
             @ApiResponse(description = "Not Found", responseCode = "404",
                 content = @Content(schema = @Schema(implementation = ResponseException.class))),
@@ -124,10 +107,8 @@ public interface GameControllerDocs {
 
     @Operation(
         summary = "Remove a specific game from db using its id",
-        parameters = {
-            @Parameter(name = "id", required = true, schema = @Schema(implementation = Integer.class))
-        },
         responses = {
+            @ApiResponse(description = "No Content", responseCode = "204", content = @Content),
             @ApiResponse(description = "Not Found", responseCode = "404",
                 content = @Content(schema = @Schema(implementation = ResponseException.class))),
             @ApiResponse(description = "Bad Request", responseCode = "400",

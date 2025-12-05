@@ -1,13 +1,12 @@
 package com.study.mf.services;
 
 import com.study.mf.controllers.GameController;
-import com.study.mf.data.dto.GameDTO;
+import com.study.mf.dto.GameDTO;
 import com.study.mf.exceptions.CustomBadRequestException;
 import com.study.mf.exceptions.CustomResourceNotFoundException;
 import com.study.mf.model.Game;
 
 import static com.study.mf.mappers.ObjectMapper.parseObject;
-import static com.study.mf.mappers.ObjectMapper.parseListObject;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
@@ -22,8 +21,6 @@ import org.springframework.hateoas.EntityModel;
 import org.springframework.hateoas.Link;
 import org.springframework.hateoas.PagedModel;
 import org.springframework.stereotype.Service;
-
-import java.util.List;
 
 @Service
 public class GameService {

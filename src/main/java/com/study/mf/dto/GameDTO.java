@@ -1,4 +1,4 @@
-package com.study.mf.data.dto;
+package com.study.mf.dto;
 
 import com.study.mf.model.Game;
 import org.springframework.hateoas.RepresentationModel;

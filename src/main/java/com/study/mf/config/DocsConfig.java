@@ -10,10 +10,10 @@ import org.springframework.context.annotation.Configuration;
 public class DocsConfig {
 
     @Bean
-    OpenAPI swaggerDOcsConfigurator(){
+    OpenAPI swaggerDocsConfigurator(){
         return new OpenAPI().info(
             new Info()
-                .title("Games Library API")
+                .title("Retro Games Library API")
                 .description("Management of retro games")
                 .version("v1")
                 .license(new License().name("Apache 2.0"))

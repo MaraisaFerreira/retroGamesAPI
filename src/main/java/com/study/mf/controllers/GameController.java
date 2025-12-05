@@ -1,7 +1,7 @@
 package com.study.mf.controllers;
 
-import com.study.mf.data.dto.GameDTO;
-import com.study.mf.model.Game;
+import com.study.mf.docs.GameControllerDocs;
+import com.study.mf.dto.GameDTO;
 import com.study.mf.services.GameService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
@@ -15,13 +15,12 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.lang.reflect.Field;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
 @RestController
 @RequestMapping("/api/v1/games")
-public class GameController implements com.study.mf.controllers.docs.GameControllerDocs {
+public class GameController implements GameControllerDocs {
     @Autowired
     private GameService gameService;
 
