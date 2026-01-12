@@ -24,55 +24,23 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class GameService {
-    @Autowired
-    private GameRepository repository;
+    private final GameRepository repository;
 
-    @Autowired
-    PagedResourcesAssembler<GameDTO> assembler;
+  public GameService(GameRepository repository) {
+    this.repository = repository;
+  }
 
-    public PagedModel<EntityModel<GameDTO>> findAll(Pageable pageable) {
+  public Page<GameDTO> findAll(Pageable pageable) {
         Page<Game> gamePage = repository.findAll(pageable);
 
-        Page<GameDTO> dtoPage = gamePage.map(game -> {
-            GameDTO dto = parseObject(game, GameDTO.class);
-            addHateoasLinks(dto);
-            return dto;
-        });
-
-        Sort.Order order = pageable.getSort().iterator().next();
-        String direction = order.getDirection().toString();
-        String itemOrder = order.getProperty();
-
-        Link pageLinks = linkTo(methodOn(GameController.class).findAll(
-            pageable.getPageNumber(),
-            pageable.getPageSize(),
-            direction,
-            itemOrder
-        )).withSelfRel().withType("GET");
-
-        return assembler.toModel(dtoPage, pageLinks);
+        return gamePage.map(game ->
+            parseObject(game, GameDTO.class)
+        );
     }
 
-    public PagedModel<EntityModel<GameDTO>> findByPartName(String name, Pageable pageable) {
+    public Page<GameDTO> findByPartName(String name, Pageable pageable) {
         Page<Game> gamePage = repository.findByPartName(name, pageable);
-        Page<GameDTO> gameDTOPage = gamePage.map(game -> {
-            GameDTO dto = parseObject(game, GameDTO.class);
-            addHateoasLinks(dto);
-            return dto;
-        });
-        Sort.Order order = pageable.getSort().iterator().next();
-        String direction = order.getDirection().toString();
-        String orderBy = order.getProperty();
-
-        Link pageLink = linkTo(methodOn(GameController.class).findByPartName(
-            name,
-            pageable.getPageNumber(),
-            pageable.getPageSize(),
-            direction,
-            orderBy
-        )).withSelfRel().withType("GET");
-
-        return assembler.toModel(gameDTOPage, pageLink);
+        return gamePage.map(game -> parseObject(game, GameDTO.class));
     }
 
     public GameDTO findById(Long id) {
@@ -81,9 +49,7 @@ public class GameService {
         Game game = repository.findById(id)
             .orElseThrow(() -> new CustomResourceNotFoundException("Game Not Found"));
 
-        GameDTO dto = parseObject(game, GameDTO.class);
-        addHateoasLinks(dto);
-        return dto;
+        return parseObject(game, GameDTO.class);
     }
 
     public GameDTO create(GameDTO game) {
@@ -94,9 +60,7 @@ public class GameService {
         Game toSave = parseObject(game, Game.class);
         Game saved = repository.save(toSave);
 
-        GameDTO dto = parseObject(saved, GameDTO.class);
-        addHateoasLinks(dto);
-        return dto;
+        return parseObject(saved, GameDTO.class);
     }
 
     @Transactional
@@ -110,9 +74,7 @@ public class GameService {
         if (game.getConsole() != null) entity.setConsole(game.getConsole());
         if (game.getYear() != null) entity.setYear(game.getYear());
 
-        GameDTO dto = parseObject(entity, GameDTO.class);
-        addHateoasLinks(dto);
-        return dto;
+        return parseObject(entity, GameDTO.class);
     }
 
     public void delete(Long id) {
@@ -121,13 +83,5 @@ public class GameService {
         Game game = repository.findById(id)
             .orElseThrow(() -> new CustomResourceNotFoundException("Game Not Found"));
         repository.delete(game);
-    }
-
-    private void addHateoasLinks(GameDTO dto) {
-        dto.add(linkTo(methodOn(GameController.class).findById(dto.getId())).withSelfRel().withType("GET"));
-        dto.add(linkTo(methodOn(GameController.class).findAll(0, 50, "asc", "name")).withRel("findAll").withType("GET"));
-        dto.add(linkTo(methodOn(GameController.class).create(dto)).withRel("create").withType("POST"));
-        dto.add(linkTo(methodOn(GameController.class).update(dto)).withRel("update").withType("PUT"));
-        dto.add(linkTo(methodOn(GameController.class).delete(dto.getId())).withRel("delete").withType("DELETE"));
     }
 }
